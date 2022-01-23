@@ -75,7 +75,7 @@ static int maybe_want_oid(git_remote *remote, git_refspec *spec)
 	oid_head = git__calloc(1, sizeof(git_remote_head));
 	GIT_ERROR_CHECK_ALLOC(oid_head);
 
-	git_oid_fromstr(&oid_head->oid, spec->src);
+	git_oid_fromstr(&oid_head->oid, spec->src, GIT_OID_SHA1);
 	oid_head->name = git__strdup(spec->dst);
 	GIT_ERROR_CHECK_ALLOC(oid_head->name);
 
@@ -137,7 +137,7 @@ static int filter_wants(git_remote *remote, const git_fetch_options *opts)
 
 	/* Handle explicitly specified OID specs */
 	git_vector_foreach(&remote->active_refspecs, i, spec) {
-		if (!git_oid__is_hexstr(spec->src))
+		if (!git_oid__is_hexstr(spec->src, GIT_OID_SHA1))
 			continue;
 
 		if (!(remote_caps & oid_mask)) {
