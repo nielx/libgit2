@@ -55,7 +55,11 @@ check_prototype_definition(qsort_r
 
 check_function_exists(qsort_s GIT_QSORT_S)
 
+# util/rand: getentropy and getloadavg
+
 check_function_exists(getentropy GIT_RAND_GETENTROPY)
+
+check_function_exists(getloadavg GIT_RAND_GETLOADAVG)
 
 # Find required dependencies
 
@@ -90,6 +94,11 @@ if(WIN32 AND EMBED_SSH_PATH)
 	list(APPEND LIBGIT2_SYSTEM_INCLUDES "${EMBED_SSH_PATH}/include")
 	file(WRITE "${EMBED_SSH_PATH}/src/libssh2_config.h" "#define HAVE_WINCNG\n#define LIBSSH2_WINCNG\n#include \"../win32/libssh2_config.h\"")
 	set(GIT_SSH 1)
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Haiku")
+	list(APPEND LIBGIT2_SYSTEM_LIBS gnu network)
+	list(APPEND LIBGIT2_PC_LIBS "-lgnu -lnetwork")
 endif()
 
 include(SelectHTTPSBackend)
